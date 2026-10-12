@@ -1,0 +1,451 @@
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #0b0e13;
+  color: #e6e9ef;
+}
+a { color: #7cc4ff; }
+button {
+  background: #2563eb; color: #fff; border: 0; border-radius: 8px;
+  padding: 8px 14px; font-size: 14px; cursor: pointer;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.secondary { background: #374151; }
+button.danger { background: #dc2626; }
+button.good { background: #16a34a; }
+
+.wrap { max-width: 1400px; margin: 0 auto; padding: 16px; }
+.row { display: flex; gap: 16px; }
+.col { display: flex; flex-direction: column; gap: 16px; }
+
+.landing { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 16px; }
+.landing h1 { font-size: 42px; margin: 0; }
+.landing .cards { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.landing .card {
+  background: #141a23; border: 1px solid #222a36; border-radius: 14px;
+  padding: 20px 26px; min-width: 220px; text-align: center;
+}
+.landing .card h3 { margin: 0 0 8px; }
+.landing .card p { color: #98a3b3; font-size: 13px; margin: 0 0 12px; }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 3px;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  background: #0e1319;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid #1e2734;
+}
+.cell {
+  position: relative;
+  background: #1a212c;
+  border-radius: 6px;
+  padding: 4px;
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.cell .tile-num { font-weight: 700; font-size: 12px; color: #cbd5e1; }
+.cell .tile-label { font-size: 9px; color: #94a3b8; margin-top: 2px; }
+.cell.special { background: #facc15; color: #7c2d12; }
+.cell.special .tile-num, .cell.special .tile-label { color: #7c2d12; }
+.cell.finish { background: #16a34a; color: #fff; }
+.cell.finish .tile-num, .cell.finish .tile-label { color: #fff; }
+.tokens { position: absolute; inset: 0; display: flex; flex-wrap: wrap; align-content: flex-end; padding: 3px; gap: 2px; pointer-events: none; }
+.token {
+  width: 18px; height: 18px; border-radius: 50%;
+  font-size: 8px; font-weight: 700; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid #000a;
+  text-shadow: 0 1px 1px #000a;
+}
+.token.finished { outline: 2px solid gold; }
+
+.panel {
+  background: #141a23; border: 1px solid #222a36; border-radius: 12px;
+  padding: 14px;
+}
+.panel h2, .panel h3 { margin: 0 0 8px; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; color: #98a3b3; }
+.players { display: flex; flex-direction: column; gap: 6px; }
+.player-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 8px; background: #0f141b;
+}
+.player-row.current { outline: 2px solid #2563eb; }
+.player-dot { width: 14px; height: 14px; border-radius: 50%; }
+.player-row .meta { font-size: 12px; color: #98a3b3; margin-left: auto; }
+
+.token-badges { display: inline-flex; gap: 3px; margin-left: 6px; vertical-align: middle; }
+.token-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 14px; line-height: 1;
+  padding: 2px 5px;
+  background: #1e2734;
+  border-radius: 6px;
+  border: 1px solid #2a3542;
+  cursor: help;
+}
+
+.log { max-height: 260px; overflow-y: auto; font-size: 12.5px; line-height: 1.5; }
+.log div { padding: 3px 0; border-bottom: 1px solid #1a212c; color: #cbd5e1; }
+
+.settings { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; }
+.settings label { display: flex; flex-direction: column; gap: 4px; color: #98a3b3; }
+.settings input, .settings select {
+  background: #0f141b; border: 1px solid #2a3542; color: #e6e9ef;
+  border-radius: 6px; padding: 6px 8px; font-size: 13px;
+}
+
+.play { max-width: 520px; margin: 0 auto; padding: 16px; }
+.play .big { font-size: 15px; padding: 16px; width: 100%; }
+.roll-display { font-size: 48px; font-weight: 800; text-align: center; padding: 8px; }
+.dice-row { display: flex; gap: 8px; justify-content: center; font-size: 22px; }
+.bid-row { display: flex; gap: 8px; align-items: center; }
+.bid-row input { flex: 1; }
+
+.banner { padding: 8px 12px; border-radius: 8px; background: #1e3a8a; color: #dbeafe; font-size: 13px; }
+.banner.warn { background: #78350f; color: #fde68a; }
+.banner.good { background: #14532d; color: #bbf7d0; }
+
+.panel#rulePanel { border-color: #2563eb; box-shadow: 0 0 0 1px #2563eb inset; }
+.panel#rulePanel h2 { color: #7cc4ff; }
+
+.rule-extra {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #0f141b;
+  border: 1px solid #2a3542;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.rule-extra .roll-result {
+  font-weight: 700;
+  font-size: 18px;
+  color: #fbbf24;
+  margin-bottom: 4px;
+}
+
+.gamble-choices {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.gamble-choices button {
+  font-size: 20px;
+  font-weight: 800;
+  padding: 16px 0;
+  background: #7c3aed;
+}
+.gamble-choices button:disabled { background: #374151; }
+.gamble-result {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.gamble-result.win  { background: #14532d; color: #bbf7d0; }
+.gamble-result.lose { background: #7f1d1d; color: #fecaca; }
+.gamble-result.tie  { background: #1e3a8a; color: #dbeafe; }
+.gamble-waiting { color: #98a3b3; font-size: 13px; margin-top: 8px; }
+
+/* ---------- Tile hover tooltip ---------- */
+.tile-tooltip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 380px;
+  padding: 10px 12px;
+  background: #0f141b;
+  color: #e6e9ef;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  box-shadow: 0 6px 24px #000a, 0 0 0 1px #2563eb33 inset;
+  font-size: 12.5px;
+  line-height: 1.45;
+  pointer-events: none;
+  transition: opacity 80ms linear;
+}
+.tile-tooltip-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.tile-tooltip-num { font-weight: 800; color: #7cc4ff; font-size: 12px; letter-spacing: 0.5px; }
+.tile-tooltip-title { font-weight: 700; color: #fff; font-size: 14px; }
+.tile-tooltip-text { color: #cbd5e1; margin-bottom: 8px; }
+.tile-tooltip-meta { display: flex; flex-wrap: wrap; gap: 4px; }
+.tt-meta-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 11px;
+  background: #1a212c;
+  border: 1px solid #2a3542;
+  color: #98a3b3;
+}
+.tt-meta-tag.tt-minigame { color: #c4b5fd; border-color: #4c1d95; }
+.tt-meta-tag.tt-type     { color: #fbbf24; border-color: #78350f; }
+.tt-meta-tag.tt-token    { color: #f472b6; border-color: #831843; }
+.tt-meta-tag.tt-sips     { color: #f87171; border-color: #7f1d1d; }
+.tt-meta-tag.tt-gold     { color: #fbbf24; border-color: #78350f; }
+.tt-meta-tag.tt-tc       { color: #60a5fa; border-color: #1e3a8a; }
+
+/* ---------- Dice roll overlay ---------- */
+.dice-roll-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+.dice-roll-overlay .die {
+  font-size: 90px;
+  line-height: 1;
+  filter: drop-shadow(0 0 18px #fbbf24);
+}
+.dice-roll-overlay .result {
+  font-size: 64px;
+  font-weight: 900;
+  color: #fbbf24;
+  text-shadow: 0 0 24px #fbbf24aa;
+  opacity: 0;
+}
+@keyframes diceFade {
+  0%   { opacity: 0; }
+  6%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes diceSpin {
+  from { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.15); }
+  to   { transform: rotate(360deg) scale(1); }
+}
+@keyframes diceResultPop {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ---------- Win overlay ---------- */
+.win-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(22,163,74,0.90), rgba(0,0,0,0.94));
+  animation: winFade 5s ease forwards;
+}
+.win-overlay .win-trophy {
+  font-size: 160px;
+  line-height: 1;
+  filter: drop-shadow(0 0 30px #fbbf24);
+  animation: winTrophy 1.2s ease-in-out infinite alternate;
+}
+.win-overlay .win-name {
+  font-size: 72px;
+  font-weight: 900;
+  margin-top: 12px;
+  color: #fbbf24;
+  text-shadow: 0 0 30px #fbbf24aa, 0 4px 12px #000a;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+.win-overlay .win-sub {
+  font-size: 26px;
+  margin-top: 8px;
+  color: #d1fae5;
+  letter-spacing: 6px;
+}
+@keyframes winFade {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes winTrophy {
+  from { transform: scale(1) rotate(-6deg); }
+  to   { transform: scale(1.12) rotate(6deg); }
+}
+
+/* ---------- Drunk meter (play page) ---------- */
+.drunk-meter {
+  margin-top: 10px;
+  padding: 10px 12px 12px;
+  background: #0f141b;
+  border-radius: 12px;
+  border: 1px solid #2a3542;
+}
+
+.drunk-meter-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2px;
+  margin-bottom: 4px;
+  line-height: 1;
+  user-select: none;
+}
+.drunk-meter-icons .icon {
+  font-size: 28px;
+  filter: drop-shadow(0 0 6px #000a);
+}
+.drunk-meter-icons .icon.sober { filter: drop-shadow(0 0 6px #22c55e88); }
+.drunk-meter-icons .icon.wasted { filter: drop-shadow(0 0 6px #ef444488); }
+
+.drunk-meter-track {
+  position: relative;
+  height: 40px;
+  background: #0a0e14;
+  border-radius: 10px;
+  border: 1px solid #2a3542;
+  box-shadow: inset 0 2px 8px #000a, inset 0 -1px 0 #ffffff0d;
+  overflow: hidden;
+}
+
+/*
+ * The gradient lives on a FULL-WIDTH layer inside the track.
+ * The clip-path reveals only the left `--fill-pct` portion of it,
+ * so a given x-position on the bar always shows the same color
+ * regardless of how full the bar is.
+ *
+ * border-radius matches the track so the fill (and the hatch overlay
+ * painted by ::before) is drawn as a rounded rect, rather than a
+ * rectangle that then gets sliced by the track's rounded corners —
+ * which previously produced a diagonal stripe sliver at each end.
+ */
+.drunk-meter-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    #22c55e 0%,
+    #a3e635 22%,
+    #fbbf24 50%,
+    #f97316 74%,
+    #ef4444 100%
+  );
+  /* inset(top right bottom left) — clip off everything to the right of the fill line */
+  clip-path: inset(0 calc(100% - var(--fill-pct, 0%)) 0 0);
+  transition: clip-path 500ms cubic-bezier(.4, 0, .2, 1);
+  overflow: hidden;
+}
+
+/*
+ * Slanted hatch overlay that gives the liquid a "flowing" slanted look.
+ * `border-radius: inherit` makes the stripes paint inside the same rounded
+ * rect as the fill, so no half-stripe sliver leaks out of the corners.
+ */
+.drunk-meter-fill::before {
+  content: '';
+  position: absolute;
+  /* Oversize by 20px on each side so translating by one period never
+     reveals an edge on the other side. Parent clips to its rounded rect. */
+  inset: 0 -20px;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.10) 0px,
+    rgba(255, 255, 255, 0.10) 6.344px,
+    rgba(0, 0, 0, 0.10) 6.344px,
+    rgba(0, 0, 0, 0.10) 12.688px
+  );
+  animation: drunk-slant 1.87s linear infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@keyframes drunk-slant {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-14px); }
+}
+/*
+ * Foam cap along the top of the liquid.
+ * - Occupies the top 20% of the track.
+ * - Bubbles are defined as a fixed 24px-wide tile that repeats
+ *   horizontally, so the pattern is identical regardless of how full
+ *   the bar is (no shift, no vertical seam at the leading edge).
+ */
+.drunk-meter-foam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20%;
+  background-image:
+  radial-gradient(circle at 1.5px  40%, #fcf194 0 4px, transparent 3px),
+    radial-gradient(circle at 6px  25%, #fff5f5 0 3.5px, transparent 4.5px),
+    radial-gradient(circle at 8px  35%, #ebdea6 0 3px, transparent 3px),
+    radial-gradient(circle at 13px  38%, #e9f5b6 0 3.5px, transparent 4.2px),
+    radial-gradient(circle at 15px  42%, #fff1c4 0 4.5px, transparent 2.9px),
+    radial-gradient(circle at 18px 30%, #d8fcf6 0 2.5px, transparent 3.6px),
+    radial-gradient(circle at 22.5px  45%, #f7e9d9 0 3.5px, transparent 2px);
+  background-size: 24px 100%;
+  background-repeat: repeat-x;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Bubbles rising through the liquid */
+.drunk-meter-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.drunk-meter-bubbles span {
+  position: absolute;
+  bottom: -10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.80);
+  box-shadow: inset 0 0 3px #fff, 0 0 4px #ffffff88;
+  animation: drunk-bubble 3.6s linear infinite;
+}
+.drunk-meter-bubbles span:nth-child(1) { left: 6%;  animation-delay: 0.0s; }
+.drunk-meter-bubbles span:nth-child(2) { left: 20%; width: 4px; height: 4px; animation-delay: 0.8s; }
+.drunk-meter-bubbles span:nth-child(3) { left: 35%; width: 8px; height: 8px; animation-delay: 1.5s; }
+.drunk-meter-bubbles span:nth-child(4) { left: 52%; animation-delay: 0.4s; }
+.drunk-meter-bubbles span:nth-child(5) { left: 68%; width: 5px; height: 5px; animation-delay: 2.1s; }
+.drunk-meter-bubbles span:nth-child(6) { left: 84%; width: 7px; height: 7px; animation-delay: 1.1s; }
+.drunk-meter-bubbles span:nth-child(7) { left: 94%; width: 4px; height: 4px; animation-delay: 2.7s; }
+@keyframes drunk-bubble {
+  0%   { transform: translateY(0);     opacity: 0; }
+  15%  { opacity: 0.85; }
+  85%  { opacity: 0.55; }
+  100% { transform: translateY(-34px); opacity: 0; }
+}
+
+.drunk-meter-label {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fbbf24;
+  letter-spacing: 0.4px;
+}
+
+/* Side-by-side action buttons inside a pending-drink row */
+.pending-actions {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+}
+.pending-actions > button {
+  flex: 1;
+}

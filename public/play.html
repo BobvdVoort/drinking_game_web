@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Player — Drink Board Game</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="play">
+    <h1 style="margin-top:0">🍻 Player</h1>
+
+    <div class="panel" id="joinPanel">
+      <h2>Join</h2>
+      <div class="settings">
+        <label>Room code <input id="in_code" type="text" maxlength="5" placeholder="ABCDE" /></label>
+        <label>Your name <input id="in_name" type="text" maxlength="16" placeholder="Alice" /></label>
+        <label style="grid-column: 1 / -1;">Password (if the host set one)
+          <input id="in_password" type="password" maxlength="32" placeholder="Leave blank if none" />
+        </label>
+      </div>
+      <div style="margin-top:8px;"><button id="btnJoin" class="good big">Join</button></div>
+      <div id="joinError" class="banner warn" style="display:none; margin-top:8px;"></div>
+    </div>
+
+    <div id="gamePanel" style="display:none;">
+      <div class="panel" style="padding:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="font-size:13px; color:#98a3b3;">Room <b id="roomCodeDisplay">—</b></div>
+          <button id="btnLeave" class="secondary" style="margin-left:auto;">🚪 Leave / change room</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>You</h2>
+        <div id="meInfo" class="players"></div>
+      </div>
+
+      <div class="panel" id="rollPanel">
+        <h2>Turn</h2>
+        <div id="rollStatus" class="banner">Waiting…</div>
+        <div class="roll-display" id="rollDisplay">🎲</div>
+        <div class="dice-row" id="diceRow"></div>
+        <button id="btnRoll" class="good big" style="margin-top:8px;">Roll</button>
+        <div id="endgameControls" style="display:none; margin-top:8px;">
+          <div style="display:flex; gap:8px;">
+            <button id="btnEndgameSuccess" class="good big" style="display:none;">✔ Success → Advance</button>
+            <button id="btnEndgameFail" class="danger big" style="display:none;">✖ Fail → Drink & Stay</button>
+          </div>
+          <button id="btnEndgameRoll" class="good big" style="display:none;">🎲 Roll for Finish</button>
+          <button id="btnEndgameRps" class="good big" style="display:none;">⚔️ Attempt RPS</button>
+          <button id="btnEndgameJizz" class="good big" style="display:none;">🎵 Start Jizz Tournament</button>
+          <button id="btnEndgameSong" class="good big" style="display:none;">🎵 Start Guess the Song</button>
+        </div>
+      </div>
+
+      <div class="panel" id="rollOffPanel" style="display:none;">
+        <h2>Roll-off (Round 1)</h2>
+        <div class="banner">Everyone rolls to decide who goes first.</div>
+        <button id="btnRollOff" class="good big" style="margin-top:8px;">Roll-off</button>
+      </div>
+
+      <div class="panel" id="orderPanel" style="display:none;">
+        <h2>You're the richest — choose order</h2>
+        <div style="display:flex; gap:8px;">
+          <button id="btnFirst" class="good big">Go First</button>
+          <button id="btnLast" class="secondary big">Go Last</button>
+        </div>
+      </div>
+
+      <div class="panel" id="rulePanel" style="display:none;">
+        <h2 id="ruleTitle">Tile Action</h2>
+        <div id="ruleText" class="banner good" style="font-size:15px; padding:12px; line-height:1.5;"></div>
+        <div id="ruleExtra" class="rule-extra" style="display:none;"></div>
+
+        <div id="gamblePanel" style="display:none;">
+          <div class="gamble-choices" id="gambleChoices">
+            <button data-n="1">1</button>
+            <button data-n="2">2</button>
+            <button data-n="3">3</button>
+            <button data-n="4">4</button>
+            <button data-n="5">5</button>
+          </div>
+          <div id="gambleResult" class="gamble-result" style="display:none;"></div>
+          <div id="gambleWaiting" class="gamble-waiting" style="display:none;">Waiting for the gamble to resolve…</div>
+        </div>
+
+        <div id="makerulePanel" style="display:none; margin-top:10px;">
+          <div id="makeruleInfo" class="rule-extra"></div>
+          <div id="makeruleInputWrap" style="display:none; margin-top:10px;">
+            <input id="makeruleInput" type="text" maxlength="200"
+                   placeholder="Type your rule…"
+                   style="width:100%; padding:10px; background:#0f141b; color:#fff; border:1px solid #2a3542; border-radius:6px; font-size:14px;" />
+            <button id="btnMakeruleSubmit" class="good big" style="margin-top:8px;">Submit Rule</button>
+          </div>
+        </div>
+
+        <div id="oddEvenPanel" style="display:none; margin-top:10px;">
+          <div id="oddEvenInfo" class="rule-extra"></div>
+        </div>
+
+        <div id="swapSeatsPanel" style="display:none; margin-top:10px;">
+          <div id="swapSeatsInfo" class="rule-extra"></div>
+        </div>
+
+        <div id="strawPanel" style="display:none; margin-top:10px;">
+          <div id="strawInfo" class="banner"></div>
+          <div id="strawCountdown" style="font-size:56px; font-weight:800; text-align:center; padding:14px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:#22d3ee; letter-spacing:3px;">1:00</div>
+          <div style="display:flex; gap:8px;">
+            <button id="btnStrawStart" class="good big" style="flex:1;">Start 60s Timer</button>
+            <button id="btnStrawReset" class="secondary big" style="flex:1;">Reset</button>
+          </div>
+        </div>
+
+        <div id="whisperPanel" style="display:none; margin-top:10px;">
+          <div id="whisperInfo" class="banner"></div>
+          <div id="whisperInputWrap" style="margin-top:10px;">
+            <div id="whisperPrompt" style="font-size:13px; color:#98a3b3; margin-bottom:6px;"></div>
+            <input id="whisperInput" type="text" maxlength="300"
+                   placeholder="Type the question you were asked…"
+                   style="width:100%; padding:10px; background:#0f141b; color:#fff; border:1px solid #2a3542; border-radius:6px; font-size:14px;" />
+            <button id="btnWhisperSubmit" class="good big" style="margin-top:8px;">Submit</button>
+          </div>
+          <div id="whisperList" class="rule-extra" style="margin-top:10px;"></div>
+          <button id="btnWhisperForce" class="secondary" style="margin-top:8px; display:none;">Force Advance Round</button>
+        </div>
+
+        <div id="auctionPanel" style="display:none; margin-top:10px;">
+          <div id="auctionInfo" class="banner"></div>
+          <div id="auctionBidWrap" style="margin-top:10px; display:none;">
+            <div id="auctionPrompt" style="font-size:13px; color:#98a3b3; margin-bottom:6px;"></div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <input id="auctionBidInput" type="number" min="0.5" max="3.5" step="0.5"
+                     placeholder="Bid (0.5 – 3.5)"
+                     style="flex:1; min-width:140px; padding:10px; background:#0f141b; color:#fff; border:1px solid #2a3542; border-radius:6px; font-size:14px;" />
+              <button id="btnAuctionBid" class="good big">Bid</button>
+              <button id="btnAuctionPass" class="danger big">Pass</button>
+            </div>
+          </div>
+          <div id="auctionHistory" class="rule-extra" style="margin-top:10px;"></div>
+        </div>
+
+        <div id="jizzDiePanel" style="display:none; margin-top:10px;">
+          <div id="jizzDieInfo" class="rule-extra"></div>
+        </div>
+
+        <div id="drinkingBuddyPanel" style="display:none; margin-top:10px;">
+          <div id="drinkingBuddyInfo" class="banner"></div>
+          <div id="drinkingBuddyPicker" style="display:none; margin-top:10px;">
+            <div style="font-size:13px; color:#98a3b3; margin-bottom:6px;">Pick your buddy:</div>
+            <div id="drinkingBuddyTargets" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+          </div>
+          <div id="drinkingBuddyResult" class="gamble-result" style="display:none; margin-top:10px;"></div>
+        </div>
+
+        <div id="vikingPanel" style="display:none; margin-top:10px;">
+          <div id="vikingInfo" class="banner"></div>
+          <div id="vikingPicker" style="margin-top:10px;">
+            <div style="font-size:13px; color:#98a3b3; margin-bottom:6px;">Who lost this round?</div>
+            <div id="vikingLosers" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+          </div>
+          <div id="vikingTally" class="rule-extra" style="margin-top:10px; display:none;"></div>
+        </div>
+
+        <div id="medusaPanel" style="display:none; margin-top:10px;">
+          <div id="medusaInfo" class="banner"></div>
+          <div id="medusaProgress" class="gamble-waiting" style="display:none;"></div>
+          <div id="medusaPicks" style="display:none; margin-top:10px;">
+            <div style="font-size:13px; color:#98a3b3; margin-bottom:6px;">Pick a target:</div>
+            <div id="medusaTargets" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+          </div>
+          <div id="medusaReveal" style="display:none; margin-top:10px;"></div>
+          <button id="btnMedusaNext" class="good big" style="display:none; margin-top:8px;">Next Round</button>
+        </div>
+
+        <div id="rpsPanel" style="display:none; margin-top:10px;">
+          <div id="rpsInfo" class="banner"></div>
+          <div id="rpsProgress" class="gamble-waiting" style="display:none;"></div>
+          <div id="rpsPicks" style="display:none; margin-top:10px;">
+            <div style="font-size:13px; color:#98a3b3; margin-bottom:6px;">Pick your throw:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <button class="rps-throw" data-throw="rock">✊ Rock</button>
+              <button class="rps-throw" data-throw="paper">✋ Paper</button>
+              <button class="rps-throw" data-throw="scissors">✌️ Scissors</button>
+            </div>
+          </div>
+          <div id="rpsResult" class="gamble-result" style="display:none; margin-top:10px;"></div>
+          <button id="btnRpsDone" class="good big" style="display:none; margin-top:8px;">Done</button>
+        </div>
+
+        <div id="jizzPanel" style="display:none; margin-top:10px;">
+          <div id="jizzInfo" class="banner"></div>
+          <div id="jizzStatus" class="rule-extra" style="margin-top:10px;"></div>
+          <button id="btnJizzContinue" class="good big" style="display:none; margin-top:8px;">Continue</button>
+        </div>
+
+        <div id="songPanel" style="display:none; margin-top:10px;">
+          <div id="songInfo" class="banner"></div>
+          <div id="songStatus" class="rule-extra" style="margin-top:10px;"></div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="btnSongWrong" class="danger big" style="display:none; flex:1;">❌ Wrong guess (½ shot)</button>
+            <button id="btnSongCorrect" class="good big" style="display:none; flex:1;">✅ Correct — advance</button>
+          </div>
+        </div>
+
+        <div id="buyoutPanel" style="display:none; margin-top:10px;">
+          <div id="buyoutInfo" class="banner warn"></div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="btnBuyoutAccept" class="good big">Accept</button>
+            <button id="btnBuyoutPay" class="danger big">Buy-out</button>
+          </div>
+          <div id="buyoutResult" class="gamble-result" style="display:none; margin-top:8px;"></div>
+        </div>
+
+        <button id="btnResolveRule" class="good big" style="margin-top:8px;">Done</button>
+      </div>
+
+      <div class="panel" id="betPanel" style="display:none;">
+        <h2>Bet Game</h2>
+        <div class="banner" id="betInfo"></div>
+        <div class="bid-row" style="margin-top:8px;">
+          <select id="bidInput" style="flex:1; background:#0f141b; color:#fff; border:1px solid #2a3542; border-radius:6px; padding:8px;"></select>
+          <button id="btnBid" class="good">Bid</button>
+        </div>
+      </div>
+
+      <div class="panel" id="buyPanel">
+        <h2>Buy a drink for someone</h2>
+        <label style="display:block; font-size:13px; color:#98a3b3;">Target
+          <select id="buyTarget" style="width:100%; margin-top:4px; background:#0f141b; color:#fff; border:1px solid #2a3542; border-radius:6px; padding:6px 8px;"></select>
+        </label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+          <button class="buy" data-item="sips2">2 sips (target) — 1g</button>
+          <button class="buy" data-item="halfShot">½ shot (target) — 2g</button>
+          <button class="buy" data-item="shot">1 shot (target) — 3g</button>
+          <button class="buy" data-item="chosenShot">1 shot (buyer picks) — 4g</button>
+          <button class="buy" data-item="toiletCard" style="grid-column:1 / -1;">🚽 Toilet card (for self) — 3g</button>
+        </div>
+      </div>
+
+      <div class="panel" id="pendingPanel" style="display:none;">
+        <h2>Drinks bought for you</h2>
+        <div id="pendingList"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Toilet</h2>
+        <button id="btnToilet" class="secondary big">Use toilet card</button>
+      </div>
+
+      <div class="panel">
+        <h2>🧪 Adjust your sips</h2>
+        <label style="display:block; font-size:13px; color:#98a3b3;">Amount (sips, 0.5 steps)
+          <input id="adjAmount" type="number" min="0.5" step="0.5" value="0.5"
+                 style="width:100%; margin-top:4px; background:#0f141b; color:#fff; border:1px solid #2a3542; border-radius:6px; padding:8px; font-size:14px;" />
+        </label>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button id="btnAdjustAdd" class="good big" style="flex:1;">➕ Add</button>
+          <button id="btnAdjustRemove" class="danger big" style="flex:1;">➖ Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rollOverlay" class="dice-roll-overlay" style="display:none;">
+    <span class="die">🎲</span>
+    <span class="result" id="rollOverlayResult"></span>
+  </div>
+  <div id="winOverlay" class="win-overlay" style="display:none;">
+    <div class="win-trophy">🏆</div>
+    <div class="win-name" id="winOverlayName">—</div>
+    <div class="win-sub">WINS!</div>
+  </div>
+
+  <script src="/socket.io.min.js"></script>
+  <script src="/board.js"></script>
+  <script src="/play.js"></script>
+</body>
+</html>

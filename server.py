@@ -24,7 +24,7 @@ PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
 
 app = Flask(__name__, static_folder=None)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-only-change-me')
-socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins='*', async_mode='gevent')
 
 PLAYTEST_PASSWORD = 'kakhoofd'
 

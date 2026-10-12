@@ -1,5 +1,5 @@
 """
-Drink Board Game — Python port of the Node.js server.
+Brutal Drinking Game — Python port of the Node.js server.
 
 Run:
     pip install -r requirements.txt

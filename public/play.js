@@ -795,14 +795,24 @@ function render() {
     ${renderDrunkMeter(p.totalSips)}
   `;
 
-  // Roll-off panel: hide entirely for players who were eliminated from the
-  // tiebreak in a previous round.
+  // Roll-off panel: kept visible for everyone. Eliminated players see a
+  // disabled "Eliminated" button so they know why they can't roll.
   if (state.roundPhase === 'roll-off') {
     const isCandidate = !state.rollOffCandidates || state.rollOffCandidates.includes(myId);
-    el('rollOffPanel').style.display = isCandidate ? 'block' : 'none';
-    el('btnRollOff').disabled = state.rollOff[myId] !== undefined;
-    el('btnRollOff').textContent = state.rollOff[myId] !== undefined
-      ? `Rolled ${state.rollOff[myId]}` : 'Roll-off';
+    el('rollOffPanel').style.display = 'block';
+
+    if (!isCandidate) {
+      el('btnRollOff').disabled = true;
+      el('btnRollOff').textContent = '🚫 Eliminated';
+      el('btnRollOff').className = 'secondary big';
+      el('btnRollOff').style.opacity = '0.4';
+    } else {
+      el('btnRollOff').className = 'good big';
+      el('btnRollOff').style.opacity = '';
+      el('btnRollOff').disabled = state.rollOff[myId] !== undefined;
+      el('btnRollOff').textContent = state.rollOff[myId] !== undefined
+        ? `Rolled ${state.rollOff[myId]}` : 'Roll-off';
+    }
   } else {
     el('rollOffPanel').style.display = 'none';
   }

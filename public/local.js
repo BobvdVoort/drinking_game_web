@@ -1047,10 +1047,18 @@ function render() {
     actions.style.alignItems = 'center';
 
     if (state.roundPhase === 'roll-off') {
+      const isCandidate = !state.rollOffCandidates || state.rollOffCandidates.includes(p.id);
       const b = document.createElement('button');
-      b.textContent = state.rollOff[p.id] !== undefined ? `Rolled ${state.rollOff[p.id]}` : 'Roll-off';
-      b.disabled = state.rollOff[p.id] !== undefined;
-      b.onclick = () => socket.emit('player:rollOff', { code: state.code, playerId: p.id });
+      if (!isCandidate) {
+        b.textContent = '🚫 Eliminated';
+        b.disabled = true;
+        b.className = 'secondary';
+        b.style.opacity = '0.4';
+      } else {
+        b.textContent = state.rollOff[p.id] !== undefined ? `Rolled ${state.rollOff[p.id]}` : 'Roll-off';
+        b.disabled = state.rollOff[p.id] !== undefined;
+        b.onclick = () => socket.emit('player:rollOff', { code: state.code, playerId: p.id });
+      }
       actions.appendChild(b);
     } else if (state.roundPhase === 'order-selection' && state.orderChooserId === p.id) {
       const b1 = document.createElement('button');

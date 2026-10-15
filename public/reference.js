@@ -119,8 +119,6 @@ window.GameReference = (function () {
           (r) =>
             '<li class="ref-list-item">' +
             '<div class="ref-item-title">' +
-            r.n +
-            '. ' +
             esc(r.title) +
             '</div>' +
             '<div class="ref-item-text">' +

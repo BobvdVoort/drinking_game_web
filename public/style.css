@@ -556,15 +556,19 @@ html, body.host-body {
 .host-details[open] > summary::before { content: '▾ '; }
 
 /* =========================================================
-   Host layout — fits the viewport
+   Host layout — locks the host page to the viewport.
+   Scoped to body.host-body so it NEVER affects local.html or
+   play.html.
    ========================================================= */
 body.host-body {
   margin: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .host-wrap {
-  height: 100vh;
-  height: 100dvh;
+  height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 10px;
@@ -574,7 +578,8 @@ body.host-body {
   margin: 0;
 }
 
-/* Fallback: on very short viewports, let the page scroll so nothing gets clipped */
+/* Safety net: very short viewports get a normal scroll instead
+   of clipping panels. */
 @media (max-height: 560px) {
   body.host-body { overflow-y: auto; }
   .host-wrap {
@@ -671,7 +676,8 @@ body.host-body {
 .host-details[open] > summary::before { content: '▾ '; }
 
 /* =========================================================
-   Local page — normal scroll, collapsible side panels
+   Local page — normal document flow, collapsible side panels.
+   The page scrolls like any ordinary page.
    ========================================================= */
 .local-main {
   display: flex;

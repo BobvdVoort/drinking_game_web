@@ -5,6 +5,20 @@ html, body {
   background: #0b0e13;
   color: #e6e9ef;
 }
+
+/* Make sure every page EXCEPT host.html scrolls by default.
+   The host page opts back into a locked viewport below by
+   setting overflow:hidden on body.host-body only. */
+html {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+body {
+  min-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 a { color: #7cc4ff; }
 button {
   background: #2563eb; color: #fff; border: 0; border-radius: 8px;
@@ -316,17 +330,6 @@ button.good { background: #16a34a; }
   overflow: hidden;
 }
 
-/*
- * The gradient lives on a FULL-WIDTH layer inside the track.
- * The clip-path reveals only the left `--fill-pct` portion of it,
- * so a given x-position on the bar always shows the same color
- * regardless of how full the bar is.
- *
- * border-radius matches the track so the fill (and the hatch overlay
- * painted by ::before) is drawn as a rounded rect, rather than a
- * rectangle that then gets sliced by the track's rounded corners —
- * which previously produced a diagonal stripe sliver at each end.
- */
 .drunk-meter-fill {
   position: absolute;
   inset: 0;
@@ -339,22 +342,14 @@ button.good { background: #16a34a; }
     #f97316 74%,
     #ef4444 100%
   );
-  /* inset(top right bottom left) — clip off everything to the right of the fill line */
   clip-path: inset(0 calc(100% - var(--fill-pct, 0%)) 0 0);
   transition: clip-path 500ms cubic-bezier(.4, 0, .2, 1);
   overflow: hidden;
 }
 
-/*
- * Slanted hatch overlay that gives the liquid a "flowing" slanted look.
- * `border-radius: inherit` makes the stripes paint inside the same rounded
- * rect as the fill, so no half-stripe sliver leaks out of the corners.
- */
 .drunk-meter-fill::before {
   content: '';
   position: absolute;
-  /* Oversize by 20px on each side so translating by one period never
-     reveals an edge on the other side. Parent clips to its rounded rect. */
   inset: 0 -20px;
   background: repeating-linear-gradient(
     115deg,
@@ -372,13 +367,7 @@ button.good { background: #16a34a; }
   from { transform: translateX(0); }
   to   { transform: translateX(-14px); }
 }
-/*
- * Foam cap along the top of the liquid.
- * - Occupies the top 20% of the track.
- * - Bubbles are defined as a fixed 24px-wide tile that repeats
- *   horizontally, so the pattern is identical regardless of how full
- *   the bar is (no shift, no vertical seam at the leading edge).
- */
+
 .drunk-meter-foam {
   position: absolute;
   top: 0;
@@ -399,7 +388,6 @@ button.good { background: #16a34a; }
   pointer-events: none;
 }
 
-/* Bubbles rising through the liquid */
 .drunk-meter-bubbles {
   position: absolute;
   inset: 0;
@@ -439,7 +427,6 @@ button.good { background: #16a34a; }
   letter-spacing: 0.4px;
 }
 
-/* Side-by-side action buttons inside a pending-drink row */
 .pending-actions {
   display: flex;
   gap: 6px;
@@ -451,114 +438,10 @@ button.good { background: #16a34a; }
 }
 
 /* =========================================================
-   Host layout — fits everything in the viewport
-   ========================================================= */
-html, body.host-body {
-  height: 100%;
-  overflow: hidden;
-}
-
-.host-wrap {
-  height: 100vh;
-  height: 100dvh;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 10px;
-  padding: 10px;
-  box-sizing: border-box;
-  max-width: none;
-  margin: 0;
-}
-
-.host-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  min-height: 0;
-}
-.host-title { margin: 0; font-size: 20px; }
-.host-actions {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.host-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 10px;
-  min-height: 0;
-  min-width: 0;
-}
-
-.host-left {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 10px;
-  min-height: 0;
-  min-width: 0;
-}
-
-.host-action-panel {
-  max-height: 38vh;
-  overflow-y: auto;
-  min-height: 0;
-}
-
-.host-board-wrap {
-  min-height: 0;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.host-board-wrap .board {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  max-width: 100%;
-  max-height: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-}
-
-.host-side {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-height: 0;
-  min-width: 0;
-  overflow-y: auto;
-}
-.host-side-panel {
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 12px;
-}
-.host-side-panel h2 { margin-bottom: 6px; }
-.host-scroll { overflow-y: auto; min-height: 0; }
-
-.host-details > summary {
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  color: #98a3b3;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  list-style: none;
-}
-.host-details > summary::-webkit-details-marker { display: none; }
-.host-details > summary::before { content: '▸ '; color: #7cc4ff; }
-.host-details[open] > summary::before { content: '▾ '; }
-
-/* =========================================================
    Host layout — locks the host page to the viewport.
-   Scoped to body.host-body so it NEVER affects local.html or
-   play.html.
+   Scoped to body.host-body ONLY. <html> and any other page's
+   <body> are left untouched so play.html and local.html
+   continue to scroll naturally.
    ========================================================= */
 body.host-body {
   margin: 0;
@@ -578,8 +461,8 @@ body.host-body {
   margin: 0;
 }
 
-/* Safety net: very short viewports get a normal scroll instead
-   of clipping panels. */
+/* Safety net: very short viewports get a normal page scroll
+   instead of clipping panels. */
 @media (max-height: 560px) {
   body.host-body { overflow-y: auto; }
   .host-wrap {

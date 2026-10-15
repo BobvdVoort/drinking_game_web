@@ -26,12 +26,12 @@
     </div>
 
     <div id="gameArea" style="display:none; margin-top:16px;">
-      <div class="row" style="align-items:center; flex-wrap:wrap;">
+      <div class="row" style="align-items:center; flex-wrap:wrap; gap:8px;">
         <div class="banner">Room: <b id="codeText">—</b></div>
         <div class="banner" id="phaseBanner">—</div>
         <div class="banner" id="turnBanner">—</div>
         <div class="banner" id="rollBanner" style="display:none; background:#7c2d12; color:#fed7aa; font-weight:700;">🎲 —</div>
-        <div style="margin-left:auto; display:flex; gap:8px;">
+        <div style="margin-left:auto; display:flex; gap:8px; flex-wrap:wrap;">
           <button id="btnStart" class="good">Start Game</button>
           <button id="btnPause" class="secondary">Pause</button>
           <button id="btnResume" class="secondary">Resume</button>
@@ -209,18 +209,29 @@
         <button id="btnResolveRule" class="good" style="margin-top:10px;">Mark Done</button>
       </div>
 
-      <div class="row" style="margin-top:16px">
-        <div style="flex: 2; min-width: 520px;">
+      <div class="row local-main" style="margin-top:16px;">
+        <div class="local-board-col">
           <div id="board" class="board"></div>
         </div>
-        <div class="col" style="flex: 1; min-width: 340px;">
+        <div class="col local-side-col">
+
           <div class="panel">
             <h2>Virtual players</h2>
             <div id="vplayers" class="players"></div>
           </div>
-          <div class="panel">
-            <h2>Settings</h2>
-            <div class="settings">
+
+          <details class="panel local-details">
+            <summary>📖 Common Rules &amp; Minigames</summary>
+            <div class="ref-tabs-mini">
+              <button class="ref-tab-mini active" data-reftab-mini="common">Common Rules</button>
+              <button class="ref-tab-mini" data-reftab-mini="minigames">Minigames</button>
+            </div>
+            <div id="inlineRefContent" class="ref-content-inline"></div>
+          </details>
+
+          <details class="panel local-details">
+            <summary>⚙ Settings</summary>
+            <div class="settings" style="margin-top:8px;">
               <label>Start gold <input id="s_gold" type="number" min="0" step="1" /></label>
               <label>Turn timer (s) <input id="s_timer" type="number" min="0" step="5" /></label>
               <label>Timer action
@@ -245,10 +256,11 @@
             <div style="margin-top:8px;">
               <button id="btnSaveSettings" class="good">Save Settings</button>
             </div>
-          </div>
-          <div class="panel">
-            <h2>🧪 Adjust sips</h2>
-            <div class="settings">
+          </details>
+
+          <details class="panel local-details">
+            <summary>🧪 Adjust sips</summary>
+            <div class="settings" style="margin-top:8px;">
               <label style="grid-column: 1 / -1;">Player
                 <select id="adjPlayer"></select>
               </label>
@@ -260,11 +272,12 @@
               <button id="btnAdjustAdd" class="good">➕ Add sips</button>
               <button id="btnAdjustRemove" class="danger">➖ Remove sips</button>
             </div>
-          </div>
-          <div class="panel">
-            <h2>Log</h2>
-            <div id="log" class="log"></div>
-          </div>
+          </details>
+
+          <details class="panel local-details" open>
+            <summary>📜 Log</summary>
+            <div id="log" class="log" style="margin-top:8px;"></div>
+          </details>
         </div>
       </div>
     </div>

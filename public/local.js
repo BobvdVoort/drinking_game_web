@@ -23,6 +23,18 @@ function setRefTab(tab) {
   }
 }
 
+let _inlineRefTab = 'common';
+function renderInlineRef() {
+  const wrap = el('inlineRefContent');
+  if (!wrap || !window.GameReference) return;
+  wrap.innerHTML = _inlineRefTab === 'minigames'
+    ? window.GameReference.renderMinigamesHTML()
+    : window.GameReference.renderCommonRulesHTML();
+  document.querySelectorAll('.ref-tab-mini').forEach(b => {
+    b.classList.toggle('active', b.dataset.reftabMini === _inlineRefTab);
+  });
+}
+
 const TOKEN_INFO = {
   thumbmaster:      { emoji: '👍', label: 'Thumbmaster' },
   'beer-slut':      { emoji: '🍺', label: 'Beer-Slut' },
@@ -213,6 +225,7 @@ socket.on('local:created', (res) => {
   el('setup').style.display = 'none';
   el('gameArea').style.display = 'block';
   el('codeText').textContent = code;
+  renderInlineRef();
 });
 
 socket.on('state', (s) => {
@@ -1352,10 +1365,13 @@ el('btnReference').onclick = () => {
   setRefTab('common');
   if (!rulesData) socket.emit('host:getRules', { code });
 };
-
 document.querySelectorAll('.ref-overlay-tab').forEach(b => {
   b.onclick = () => setRefTab(b.dataset.reftab);
 });
+document.querySelectorAll('.ref-tab-mini').forEach(b => {
+  b.onclick = () => { _inlineRefTab = b.dataset.reftabMini; renderInlineRef(); };
+});
+renderInlineRef();
 el('btnCloseRules').onclick = () => { el('rulesOverlay').style.display = 'none'; };
 el('btnReloadRulesOverlay').onclick = () => socket.emit('host:reloadRules', { code });
 

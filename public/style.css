@@ -556,17 +556,15 @@ html, body.host-body {
 .host-details[open] > summary::before { content: '▾ '; }
 
 /* =========================================================
-   Host layout — fits everything in the viewport
+   Host layout — fits the viewport
    ========================================================= */
 body.host-body {
   margin: 0;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
 }
 
 .host-wrap {
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 10px;
@@ -574,6 +572,17 @@ body.host-body {
   box-sizing: border-box;
   max-width: none;
   margin: 0;
+}
+
+/* Fallback: on very short viewports, let the page scroll so nothing gets clipped */
+@media (max-height: 560px) {
+  body.host-body { overflow-y: auto; }
+  .host-wrap {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .host-main { min-height: 500px; }
 }
 
 .host-toolbar {
@@ -662,7 +671,43 @@ body.host-body {
 .host-details[open] > summary::before { content: '▾ '; }
 
 /* =========================================================
-   Reference overlay (Tile Rules / Common Rules / Minigames)
+   Local page — normal scroll, collapsible side panels
+   ========================================================= */
+.local-main {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.local-board-col {
+  flex: 2 1 500px;
+  min-width: 280px;
+}
+.local-side-col {
+  flex: 1 1 340px;
+  min-width: 280px;
+}
+
+.local-details {
+  padding: 10px 14px;
+  display: block;
+}
+.local-details > summary {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #98a3b3;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  list-style: none;
+}
+.local-details > summary::-webkit-details-marker { display: none; }
+.local-details > summary::before { content: '▸ '; color: #7cc4ff; }
+.local-details[open] > summary::before { content: '▾ '; }
+.local-details > *:not(summary) { margin-top: 8px; }
+
+/* =========================================================
+   Reference overlay (shared by host & local)
    ========================================================= */
 .ref-overlay {
   position: fixed;
@@ -773,7 +818,7 @@ body.host-body {
 #rulesTable td { vertical-align: top; }
 
 /* =========================================================
-   Fixes for form inputs (all pages) — keep them inside their box
+   Input sizing — keep text inputs inside their containers
    ========================================================= */
 .settings label { min-width: 0; }
 .settings input,
@@ -783,16 +828,8 @@ body.host-body {
   box-sizing: border-box;
 }
 
-/* On narrow phones, stack the settings grid to a single column so
-   inputs don't get squeezed off the right edge of the screen. */
 @media (max-width: 480px) {
-  .play {
-    padding: 12px;
-  }
-  .settings {
-    grid-template-columns: 1fr !important;
-  }
-  .settings label {
-    grid-column: 1 / -1 !important;
-  }
+  .play { padding: 12px; }
+  .settings { grid-template-columns: 1fr !important; }
+  .settings label { grid-column: 1 / -1 !important; }
 }

@@ -449,3 +449,219 @@ button.good { background: #16a34a; }
 .pending-actions > button {
   flex: 1;
 }
+
+/* =========================================================
+   Host layout — fits everything in the viewport
+   ========================================================= */
+html, body.host-body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.host-wrap {
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  max-width: none;
+  margin: 0;
+}
+
+.host-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-height: 0;
+}
+.host-title { margin: 0; font-size: 20px; }
+.host-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.host-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.host-left {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.host-action-panel {
+  max-height: 38vh;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.host-board-wrap {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.host-board-wrap .board {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.host-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+}
+.host-side-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+}
+.host-side-panel h2 { margin-bottom: 6px; }
+.host-scroll { overflow-y: auto; min-height: 0; }
+
+.host-details > summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #98a3b3;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  list-style: none;
+}
+.host-details > summary::-webkit-details-marker { display: none; }
+.host-details > summary::before { content: '▸ '; color: #7cc4ff; }
+.host-details[open] > summary::before { content: '▾ '; }
+
+/* =========================================================
+   Reference overlay (Tile Rules / Common Rules / Minigames)
+   ========================================================= */
+.ref-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0b0e13f2;
+  z-index: 100;
+  overflow: auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.ref-overlay-wrap {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.ref-overlay-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.ref-overlay-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ref-overlay-tab {
+  background: #1a212c;
+  border: 1px solid #2a3542;
+  color: #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.ref-overlay-tab.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.ref-overlay-panel { display: block; }
+
+.ref-content-full,
+.ref-content-inline {
+  background: #141a23;
+  border: 1px solid #222a36;
+  border-radius: 8px;
+  padding: 14px 18px;
+  color: #cbd5e1;
+  line-height: 1.55;
+  font-size: 14px;
+}
+.ref-content-inline {
+  margin-top: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+.ref-list { margin: 0; padding-left: 22px; }
+.ref-list-item {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1a212c;
+}
+.ref-list-item:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.ref-minigames { display: grid; gap: 12px; }
+.ref-minigame {
+  padding: 12px 14px;
+  background: #0f141b;
+  border: 1px solid #2a3542;
+  border-radius: 8px;
+}
+
+.ref-item-title {
+  font-weight: 700;
+  color: #7cc4ff;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+.ref-item-text { color: #cbd5e1; }
+
+.ref-tabs-mini {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+.ref-tab-mini {
+  flex: 1;
+  background: #1a212c;
+  border: 1px solid #2a3542;
+  color: #cbd5e1;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.ref-tab-mini.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+#rulesTable th,
+#rulesTable td { vertical-align: top; }

@@ -4,6 +4,25 @@ let code = null;
 let rulesData = null;
 const el = (id) => document.getElementById(id);
 
+// ---------- Reference / rules overlay ----------
+function setRefTab(tab) {
+  document.querySelectorAll('.ref-overlay-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.reftab === tab);
+  });
+  const pTiles  = el('refPanel-tiles');
+  const pCommon = el('refPanel-common');
+  const pMinis  = el('refPanel-minigames');
+  if (pTiles)  pTiles.style.display  = tab === 'tiles'     ? 'block' : 'none';
+  if (pCommon) pCommon.style.display = tab === 'common'    ? 'block' : 'none';
+  if (pMinis)  pMinis.style.display  = tab === 'minigames' ? 'block' : 'none';
+  if (tab === 'common' && window.GameReference && el('refCommonContent')) {
+    el('refCommonContent').innerHTML = window.GameReference.renderCommonRulesHTML();
+  }
+  if (tab === 'minigames' && window.GameReference && el('refMinigamesContent')) {
+    el('refMinigamesContent').innerHTML = window.GameReference.renderMinigamesHTML();
+  }
+}
+
 const TOKEN_INFO = {
   thumbmaster:      { emoji: '👍', label: 'Thumbmaster' },
   'beer-slut':      { emoji: '🍺', label: 'Beer-Slut' },
@@ -1325,8 +1344,18 @@ el('btnSaveSettings').onclick = () => {
 };
 el('btnShowRules').onclick = () => {
   el('rulesOverlay').style.display = 'block';
+  setRefTab('tiles');
   if (!rulesData) socket.emit('host:getRules', { code });
 };
+el('btnReference').onclick = () => {
+  el('rulesOverlay').style.display = 'block';
+  setRefTab('common');
+  if (!rulesData) socket.emit('host:getRules', { code });
+};
+
+document.querySelectorAll('.ref-overlay-tab').forEach(b => {
+  b.onclick = () => setRefTab(b.dataset.reftab);
+});
 el('btnCloseRules').onclick = () => { el('rulesOverlay').style.display = 'none'; };
 el('btnReloadRulesOverlay').onclick = () => socket.emit('host:reloadRules', { code });
 

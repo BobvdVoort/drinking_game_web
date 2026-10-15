@@ -38,6 +38,7 @@
           <button id="btnSkip" class="secondary">Skip Turn</button>
           <button id="btnReloadRules" class="secondary">Reload rules.csv</button>
           <button id="btnShowRules" class="secondary">📋 Tile Rules</button>
+          <button id="btnReference" class="secondary">📖 Reference</button>
           <button id="btnPlaytest" class="secondary" title="Enter play-test mode">🧪 Play-test</button>
         </div>
       </div>
@@ -269,34 +270,49 @@
     </div>
   </div>
 
-  <div id="rulesOverlay" style="display:none; position:fixed; inset:0; background:#0b0e13f2; z-index:100; overflow:auto; padding:16px;">
-    <div class="wrap" style="max-width: 1600px;">
-      <div class="row" style="align-items:center; margin-bottom:12px;">
-        <h2 style="margin:0">📋 Tile Rules (1–99)</h2>
+  <div id="rulesOverlay" class="ref-overlay" style="display:none;">
+    <div class="ref-overlay-wrap">
+      <div class="ref-overlay-header">
+        <div class="ref-overlay-tabs">
+          <button class="ref-overlay-tab active" data-reftab="tiles">📋 Tile Rules</button>
+          <button class="ref-overlay-tab" data-reftab="common">📖 Common Rules</button>
+          <button class="ref-overlay-tab" data-reftab="minigames">🎲 Minigames</button>
+        </div>
         <div class="banner" id="rulesCount">—</div>
         <div style="margin-left:auto; display:flex; gap:8px;">
           <button id="btnReloadRulesOverlay" class="secondary">Reload rules.csv</button>
           <button id="btnCloseRules" class="good">Close</button>
         </div>
       </div>
-      <div style="overflow-x:auto;">
-        <table id="rulesTable" style="width:100%; border-collapse:collapse; font-size:12.5px; background:#141a23; border-radius:8px;">
-          <thead>
-            <tr style="background:#0f141b; text-align:left;">
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Tile</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Type</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Title</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Minigame</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Tokens</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">BG Var</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Sips</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Gold</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">TC</th>
-              <th style="padding:8px; border-bottom:1px solid #222a36;">Text</th>
-            </tr>
-          </thead>
-          <tbody id="rulesBody"></tbody>
-        </table>
+
+      <div class="ref-overlay-panel" id="refPanel-tiles">
+        <div style="overflow-x:auto;">
+          <table id="rulesTable" style="width:100%; border-collapse:collapse; font-size:12.5px; background:#141a23; border-radius:8px;">
+            <thead>
+              <tr style="background:#0f141b; text-align:left;">
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Tile</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Type</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Title</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Minigame</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Tokens</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">BG Var</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Sips</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Gold</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">TC</th>
+                <th style="padding:8px; border-bottom:1px solid #222a36;">Text</th>
+              </tr>
+            </thead>
+            <tbody id="rulesBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="ref-overlay-panel" id="refPanel-common" style="display:none;">
+        <div class="ref-content-full" id="refCommonContent"></div>
+      </div>
+
+      <div class="ref-overlay-panel" id="refPanel-minigames" style="display:none;">
+        <div class="ref-content-full" id="refMinigamesContent"></div>
       </div>
     </div>
   </div>
@@ -313,6 +329,7 @@
 
   <script src="/socket.io.min.js"></script>
   <script src="/board.js"></script>
+  <script src="/reference.js"></script>
   <script src="/local.js"></script>
 </body>
 </html>

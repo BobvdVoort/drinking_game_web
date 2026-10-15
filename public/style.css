@@ -556,6 +556,112 @@ html, body.host-body {
 .host-details[open] > summary::before { content: '▾ '; }
 
 /* =========================================================
+   Host layout — fits everything in the viewport
+   ========================================================= */
+body.host-body {
+  margin: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.host-wrap {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  max-width: none;
+  margin: 0;
+}
+
+.host-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-height: 0;
+}
+.host-title { margin: 0; font-size: 20px; }
+.host-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.host-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.host-left {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.host-action-panel {
+  max-height: 38vh;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.host-board-wrap {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.host-board-wrap .board {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.host-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+}
+.host-side-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+}
+.host-side-panel h2 { margin-bottom: 6px; }
+.host-scroll { overflow-y: auto; min-height: 0; }
+
+.host-details > summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #98a3b3;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  list-style: none;
+}
+.host-details > summary::-webkit-details-marker { display: none; }
+.host-details > summary::before { content: '▸ '; color: #7cc4ff; }
+.host-details[open] > summary::before { content: '▾ '; }
+
+/* =========================================================
    Reference overlay (Tile Rules / Common Rules / Minigames)
    ========================================================= */
 .ref-overlay {
@@ -665,3 +771,28 @@ html, body.host-body {
 
 #rulesTable th,
 #rulesTable td { vertical-align: top; }
+
+/* =========================================================
+   Fixes for form inputs (all pages) — keep them inside their box
+   ========================================================= */
+.settings label { min-width: 0; }
+.settings input,
+.settings select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* On narrow phones, stack the settings grid to a single column so
+   inputs don't get squeezed off the right edge of the screen. */
+@media (max-width: 480px) {
+  .play {
+    padding: 12px;
+  }
+  .settings {
+    grid-template-columns: 1fr !important;
+  }
+  .settings label {
+    grid-column: 1 / -1 !important;
+  }
+}

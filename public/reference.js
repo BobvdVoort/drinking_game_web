@@ -4,7 +4,7 @@ window.GameReference = (function () {
       n: 1,
       title: 'Rounds & Phases',
       text:
-        'The game is played in rounds and phases. Rounds go clockwise. The richest player chooses to go first or last each round (first round: everyone rolls, highest goes first; ties re-roll until a single highest). A round ends when everyone around the table has taken a turn. No interrupting, stalling, or hampering a round. An optional per-turn timer can be set on the host before the round starts and changed between rounds.',
+        'The game is played in rounds and phases. Rounds go clockwise. The richest player chooses to go first or last each round (first round: everyone rolls, highest goes first; ties re-roll until a single highest). A round ends when everyone around the table has taken a turn. No interrupting, stalling, or hampering a round. An optional per-turn timer can be set on the host before the round starts and changed between rounds. There are 6 phases, each made up of as many rounds as necessary — see rule 4 on special tiles.',
     },
     {
       n: 2,
@@ -100,7 +100,7 @@ window.GameReference = (function () {
       icon: '🎵',
       title: 'Jizz (-die)',
       text:
-        'Count up from 1. On any multiple of 7, any number containing a 7, or any number with repeating digits (11, 22, 33, …), say "Jizz!" instead of the number. Examples: 7, 11, 14, 17, 21, 22, 28, 33, 35, 37, 42, 44, 47, 49. Wrong call = drink (table\'s agreed sip penalty). Jizz-die: roll a die first to set how many sips the loser of the Jizz game must drink.',
+        'Count up from 1. On any multiple of 7, any number containing a 7, or any number with repeating digits (11, 22, 33, …), say "Jizz!" instead of the number. Examples: 7, 11, 14, 17, 21, 22, 28, 33, 35, 37, 42, 44, 47, 49. Wrong call = drink the agreed sip penalty. Jizz-die: roll a die first to set how many sips the loser of the Jizz game must drink.',
     },
   ];
 

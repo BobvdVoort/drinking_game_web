@@ -70,6 +70,10 @@ def _local_js():
 def _socket_io_client():
     return send_from_directory(PUBLIC_DIR, 'socket.io.min.js')
 
+@app.route('/reference.js')
+def _reference_js():
+    return send_from_directory(PUBLIC_DIR, 'reference.js')
+
 @app.route('/debug')
 def _debug():
     return jsonify({
